@@ -1,0 +1,8 @@
+{
+  "@@locale": "en",
+  "hello": "Hello, {name}!",
+  "@hello": {"placeholders": {"name": {"type": "String"}}},
+  "items": "{count, plural, one {One entry} other {{count} entries}}",
+  "@items": {"placeholders": {"count": {"type": "int"}}},
+  "symbol": "Your journal"
+}

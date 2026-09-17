@@ -1,0 +1,196 @@
+{
+  "source": "{\"@@locale\":\"en\",\"hello\":\"Hello {name}\",\"@hello\":{\"placeholders\":{\"name\":{\"type\":\"String\"}}},\"items\":\"{count, plural, one {One item} other {{count} items}}\",\"@items\":{\"placeholders\":{\"count\":{\"type\":\"num\"}}},\"symbol\":\"A café 🧭\"}",
+  "first": {
+    "schemaVersion": "1",
+    "projectId": "8aa3d087-a25e-4790-8f03-88e17a6c7555",
+    "channel": "production",
+    "schemaHash": "5eff6f3bfc9d2349ae5b799d154238a44ec736e903c2aa285dfab6328d41551c",
+    "channelVersion": 1,
+    "status": "update",
+    "releaseId": "332c844e-bf2f-40b5-b1d7-d55859fa0e60",
+    "sha256": "39b0f294f849130a6bd71447036c976ca8cc8d71d36ebf89a48867efd6c33758",
+    "snapshot": {
+      "schemaVersion": "1",
+      "projectId": "8aa3d087-a25e-4790-8f03-88e17a6c7555",
+      "sourceLocale": "en",
+      "locales": [
+        "ar",
+        "fr"
+      ],
+      "appVersions": {
+        "min": "1.0.0",
+        "max": "1.9.0"
+      },
+      "schemaHash": "5eff6f3bfc9d2349ae5b799d154238a44ec736e903c2aa285dfab6328d41551c",
+      "catalogs": [
+        {
+          "file": "app.arb",
+          "format": "arb",
+          "adapterVersion": 1,
+          "contractHash": "7c7f120d6d3fba7208e291ea96852a16dfb08b51fb961f61cc37a4d76d6c0c5c",
+          "translations": [
+            {
+              "locale": "ar",
+              "messages": {
+                "hello": "مرحباً {name}",
+                "items": "{count, plural, zero {لا عناصر} one {عنصر واحد} two {عنصران} few {{count} عناصر} many {{count} عنصراً} other {{count} عنصر}}",
+                "symbol": "قهوة 🧭"
+              }
+            },
+            {
+              "locale": "fr",
+              "messages": {
+                "hello": "Bonjour {name}",
+                "items": "{count, plural, one {Un article} other {{count} articles}}",
+                "symbol": "Un café 🧭"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "second": {
+    "schemaVersion": "1",
+    "projectId": "8aa3d087-a25e-4790-8f03-88e17a6c7555",
+    "channel": "production",
+    "schemaHash": "5eff6f3bfc9d2349ae5b799d154238a44ec736e903c2aa285dfab6328d41551c",
+    "channelVersion": 2,
+    "status": "update",
+    "releaseId": "3770d969-2a87-48ec-ade1-9f8d1be1b966",
+    "sha256": "f64e13a8c5efb028ebddbed1b27c6749785c0831de56ca0b1a542ff556cfca2f",
+    "snapshot": {
+      "schemaVersion": "1",
+      "projectId": "8aa3d087-a25e-4790-8f03-88e17a6c7555",
+      "sourceLocale": "en",
+      "locales": [
+        "ar",
+        "fr"
+      ],
+      "appVersions": {
+        "min": "1.0.0",
+        "max": "1.9.0"
+      },
+      "schemaHash": "5eff6f3bfc9d2349ae5b799d154238a44ec736e903c2aa285dfab6328d41551c",
+      "catalogs": [
+        {
+          "file": "app.arb",
+          "format": "arb",
+          "adapterVersion": 1,
+          "contractHash": "7c7f120d6d3fba7208e291ea96852a16dfb08b51fb961f61cc37a4d76d6c0c5c",
+          "translations": [
+            {
+              "locale": "ar",
+              "messages": {
+                "hello": "مرحباً {name}",
+                "items": "{count, plural, zero {لا عناصر} one {عنصر واحد} two {عنصران} few {{count} عناصر} many {{count} عنصراً} other {{count} عنصر}}",
+                "symbol": "قهوة 🧭"
+              }
+            },
+            {
+              "locale": "fr",
+              "messages": {
+                "hello": "Salut {name}",
+                "items": "{count, plural, one {Un article} other {{count} articles}}",
+                "symbol": "Un café 🧭"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "rollback": {
+    "schemaVersion": "1",
+    "projectId": "8aa3d087-a25e-4790-8f03-88e17a6c7555",
+    "channel": "production",
+    "schemaHash": "5eff6f3bfc9d2349ae5b799d154238a44ec736e903c2aa285dfab6328d41551c",
+    "channelVersion": 3,
+    "status": "update",
+    "releaseId": "332c844e-bf2f-40b5-b1d7-d55859fa0e60",
+    "sha256": "39b0f294f849130a6bd71447036c976ca8cc8d71d36ebf89a48867efd6c33758",
+    "snapshot": {
+      "schemaVersion": "1",
+      "projectId": "8aa3d087-a25e-4790-8f03-88e17a6c7555",
+      "sourceLocale": "en",
+      "locales": [
+        "ar",
+        "fr"
+      ],
+      "appVersions": {
+        "min": "1.0.0",
+        "max": "1.9.0"
+      },
+      "schemaHash": "5eff6f3bfc9d2349ae5b799d154238a44ec736e903c2aa285dfab6328d41551c",
+      "catalogs": [
+        {
+          "file": "app.arb",
+          "format": "arb",
+          "adapterVersion": 1,
+          "contractHash": "7c7f120d6d3fba7208e291ea96852a16dfb08b51fb961f61cc37a4d76d6c0c5c",
+          "translations": [
+            {
+              "locale": "ar",
+              "messages": {
+                "hello": "مرحباً {name}",
+                "items": "{count, plural, zero {لا عناصر} one {عنصر واحد} two {عنصران} few {{count} عناصر} many {{count} عنصراً} other {{count} عنصر}}",
+                "symbol": "قهوة 🧭"
+              }
+            },
+            {
+              "locale": "fr",
+              "messages": {
+                "hello": "Bonjour {name}",
+                "items": "{count, plural, one {Un article} other {{count} articles}}",
+                "symbol": "Un café 🧭"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "canonical": [
+    {
+      "value": "مرحبا 🧭 café",
+      "encoded": "\"مرحبا 🧭 café\"",
+      "sha256": "10b6fd61f70f71334aa01047fd7f2a03f55aa4078430f0fd9d6a8566848ccefa"
+    },
+    {
+      "value": "\u0000\b\t\n\f\r\"\\",
+      "encoded": "\"\\u0000\\b\\t\\n\\f\\r\\\"\\\\\"",
+      "sha256": "053192b2a918109ae353fed8f8c43704c8b797d1cd9ffffe450ead3e8684de90"
+    },
+    {
+      "value": "\ud800",
+      "encoded": "\"\\ud800\"",
+      "sha256": "8c0c59dd0d275aadcd462a5fe12eb352cbdfeaf961eae4f85a4660521df7d2f5"
+    },
+    {
+      "value": "\udfff",
+      "encoded": "\"\\udfff\"",
+      "sha256": "aa68369aff102de57c3da5ad0dd5c24149f811b4afcd13c55f2da895bd15c782"
+    },
+    {
+      "value": "\ud800X",
+      "encoded": "\"\\ud800X\"",
+      "sha256": "9e3adb6304b30393c3ac2c939a3b70207aa751e6b63c78cffa9123d8d15f49d7"
+    },
+    {
+      "value": "  ",
+      "encoded": "\"  \"",
+      "sha256": "e3a0e2262ac7790f4df36b522a8fbdd4ee3370d568eb15dc25c5f1775f14ed6c"
+    },
+    {
+      "value": {
+        "2": 2,
+        "10": 10,
+        "🧭": "😀",
+        "�": "a",
+        "": "b"
+      },
+      "encoded": "{\"10\":10,\"2\":2,\"🧭\":\"😀\",\"\":\"b\",\"�\":\"a\"}",
+      "sha256": "c0e9e2078282b13a3cde3b51474710ba7c3f77a64049dddc42e4a75c91235fde"
+    }
+  ]
+}

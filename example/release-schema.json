@@ -1,0 +1,5 @@
+{
+  "sourceLocale": "en",
+  "locales": ["fr", "ar"],
+  "catalogs": [{"file": "app.arb", "format": "arb", "path": "l10n/app_en.arb"}]
+}

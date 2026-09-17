@@ -1,0 +1,6 @@
+{
+  "@@locale": "ar",
+  "hello": "أهلًا، {name}!",
+  "items": "{count, plural, zero {لا ملاحظات} one {ملاحظة واحدة} two {ملاحظتان} few {{count} ملاحظات} many {{count} ملاحظة} other {{count} ملاحظة}}",
+  "symbol": "يومياتك"
+}

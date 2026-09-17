@@ -1,0 +1,6 @@
+{
+  "@@locale": "fr",
+  "hello": "Salut, {name} !",
+  "items": "{count, plural, one {Une note} other {{count} notes}}",
+  "symbol": "Votre journal"
+}

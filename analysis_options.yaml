@@ -1,0 +1,6 @@
+include: package:lints/recommended.yaml
+analyzer:
+  exclude:
+    - dist/**
+    - example/**
+    - lib/dartnative_plugin_registrant.dart
