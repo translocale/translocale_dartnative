@@ -158,7 +158,7 @@ OTA means over-the-air updates: your app downloads approved translations from Tr
 
 ### 1. Create a TransLocale project
 
-Open [TransLocale](https://translocale.io/) and create a project. Use English as the source language and French as the target language for this example. Add the same source ARB content with the catalog name `app.arb`.
+Open [Projects](https://translocale.io/projects), choose **New project**, and use English as the source language and French as the target. In **Catalogs → Import files**, import the source and French ARB files under the same catalog name, `app.arb`, choosing **Flutter ARB** and each file’s language. The [screenshot walkthrough](https://translocale.io/docs/getting-started) covers account setup, keys, review, and release creation; use ARB for this app rather than its i18next sample. Find your project UUID under **Project settings → Credentials**.
 
 The source keys, placeholder types, catalog name, and target languages must match the app.
 
@@ -194,21 +194,15 @@ Copy the returned `schemaHash`. This command runs locally and does not start a t
 
 ### 3. Publish a preview release
 
-In your project's dashboard, review and approve the translations, then publish a release to the `preview` channel. In the project's delivery settings, create a read-only delivery credential for the same schema and channel.
+In the Editor, select the French keys, choose **Review selected**, and approve the wording. Open **Releases → New release**, review and create the snapshot, then publish it to **Preview**. The app-version range must include your installed version.
 
-Keep the project ID, schema hash, and delivery token for the next step. The delivery token starts with `tld_`.
+Open **Releases → App delivery**, select the release schema, and create a **Preview** credential. Choose **Download configuration** while the one-time token panel is open. The file contains the project ID, schema hash, API origin, channel, and read-only delivery token. Compare its `schemaHash` with the local result from step 2 before building.
+
+![The app delivery panel with Download configuration.](https://translocale.io/docs/media/getting-started/delivery-configuration.png)
 
 ### 4. Connect your app
 
-First, add `translocale.delivery*.json` to your app's `.gitignore`. Then create `translocale.delivery.json` with your own values:
-
-```json
-{
-  "DELIVERY_PROJECT": "your-project-id",
-  "DELIVERY_SCHEMA": "the-schemaHash-from-step-2",
-  "DELIVERY_TOKEN": "your-tld-delivery-token"
-}
-```
+Save the downloaded `translocale-delivery.json` in your app directory and add that filename to `.gitignore`. Supply it through your build environment. If you lose it, revoke the old credential under App delivery and issue a replacement. Project authoring tokens from **Project settings → Credentials** must stay in developer tools or CI.
 
 In `lib/main.dart`, replace the `TransLocale` creation from the quick start with:
 
@@ -217,10 +211,11 @@ final translations = TransLocale(
   catalog: translocaleCatalog,
   locale: 'fr',
   delivery: DartNativeDelivery(
-    projectId: const String.fromEnvironment('DELIVERY_PROJECT'),
-    schemaHash: const String.fromEnvironment('DELIVERY_SCHEMA'),
-    token: const String.fromEnvironment('DELIVERY_TOKEN'),
-    channel: 'preview',
+    projectId: const String.fromEnvironment('projectId'),
+    schemaHash: const String.fromEnvironment('schemaHash'),
+    token: const String.fromEnvironment('deliveryToken'),
+    channel: const String.fromEnvironment('channel'),
+    apiBaseUrl: const String.fromEnvironment('apiBaseUrl'),
   ),
 );
 ```
@@ -232,12 +227,12 @@ The delivery token is included in the built app and can be extracted. Only use a
 Run the app with your delivery settings:
 
 ```sh
-dn run --dart-define-from-file=translocale.delivery.json
+dn run --dart-define-from-file=translocale-delivery.json
 ```
 
 Publish a different French message to the same preview channel. The app checks after the first frame and then every five minutes while it is in the foreground. You can call `await translations.check()` to refresh sooner. If an update does not appear, inspect `translations.state.status` and `translations.state.error`.
 
-For production, publish to the `production` channel, create a delivery credential for that channel, and change both the token and `channel` in your app configuration.
+For production, publish to the `production` channel, create a delivery credential for that channel, download its configuration and use that file for the production build. A Preview credential cannot read Production.
 
 Installation, bundle generation, schema checks, and delivery requests do not start paid translation jobs.
 
