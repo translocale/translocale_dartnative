@@ -1,0 +1,63 @@
+1
+00:00:00,700 --> 00:00:04,012
+Let's change a translation in a running DartNative app,
+
+2
+00:00:04,012 --> 00:00:05,116
+without rebuilding it.
+
+3
+00:00:05,800 --> 00:00:08,268
+Here's the French greeting: Bonjour Sam.
+
+4
+00:00:08,268 --> 00:00:10,735
+This is the actual iPhone simulator,
+
+5
+00:00:10,735 --> 00:00:13,203
+connected to a local demo server.
+
+6
+00:00:13,800 --> 00:00:16,781
+Now I'll make the next translation release available.
+
+7
+00:00:16,781 --> 00:00:19,389
+It changes the greeting to Salut Sam.
+
+8
+00:00:20,100 --> 00:00:22,876
+I'll tap Refresh translations to check right away.
+
+9
+00:00:22,876 --> 00:00:24,263
+There's the new wording.
+
+10
+00:00:24,263 --> 00:00:26,692
+The app stays open the whole time.
+
+11
+00:00:27,500 --> 00:00:30,136
+Let's stop the server and reopen the app.
+
+12
+00:00:30,136 --> 00:00:32,113
+The downloaded greeting is still here,
+
+13
+00:00:32,113 --> 00:00:33,431
+loaded from its cache.
+
+14
+00:00:34,500 --> 00:00:37,271
+That's OTA delivery: compatible wording updates,
+
+15
+00:00:37,271 --> 00:00:39,119
+saved for offline use.
+
+16
+00:00:39,119 --> 00:00:43,737
+Follow the steps below to connect your own TransLocale project.
