@@ -25,6 +25,8 @@ Add the dependency to your app's existing `pubspec.yaml`:
 
 ```yaml
 dependencies:
+  dartnative_system: ^1.0.0
+  dartnative_path_provider: ^1.0.0
   translocale_dartnative:
     hosted: https://dartpub.dev
     version: ^0.1.0
@@ -36,7 +38,7 @@ Then run:
 dn pub get
 ```
 
-Keep your existing DartNative framework dependencies. The shared `translocale_delivery` dependency comes from pub.dev. Use `dn pub get` so the SDK can resolve native packages.
+Keep your existing DartNative framework dependencies. Declare `dartnative_system` and `dartnative_path_provider` directly in the app: dartpub removes closed SDK dependencies from hosted package manifests, so the app must select these native plugins explicitly. The shared `translocale_delivery` dependency comes from pub.dev. Use `dn pub get` so the SDK can resolve native packages.
 
 ### 2. Add bundled translations
 
