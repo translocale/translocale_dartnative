@@ -10,9 +10,9 @@ Add translations to your [DartNative](https://dartnative.com/) app. Keep them in
 
 ## Watch the OTA demo
 
-[![Watch the 45-second DartNative OTA walkthrough](https://raw.githubusercontent.com/translocale/translocale_dartnative/main/media/ota-demo-poster.jpg)](https://github.com/user-attachments/assets/ba0ac233-4b67-4d5e-95cd-166d89365c58)
+[![Watch the 45-second DartNative OTA walkthrough](https://raw.githubusercontent.com/translocale/translocale_dartnative/main/media/ota-demo-poster.jpg)](https://github.com/translocale/translocale_dartnative/releases/tag/v0.1.0)
 
-[Watch with narration and captions](https://github.com/user-attachments/assets/ba0ac233-4b67-4d5e-95cd-166d89365c58) · [Read the transcript](https://github.com/translocale/translocale_dartnative/blob/main/media/ota-demo.md)
+[Watch with narration and captions](https://github.com/translocale/translocale_dartnative/releases/tag/v0.1.0) · [Read the transcript](https://github.com/translocale/translocale_dartnative/blob/main/media/ota-demo.md)
 
 See a French greeting change in the running app, then stay available after a restart with the server stopped. This recording uses an iOS simulator and a local delivery demo server. It shows OTA delivery and caching; follow the steps below to connect to the hosted service.
 
