@@ -1,3 +1,5 @@
+<p><img src="https://raw.githubusercontent.com/translocale/translocale_dartnative/main/media/logo.png" width="96" height="96" alt="TransLocale"></p>
+
 # TransLocale for DartNative
 
 ARB localization and approved translation updates for native iOS and Android apps built with [DartNative](https://dartnative.com/).
