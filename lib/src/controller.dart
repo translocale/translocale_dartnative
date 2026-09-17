@@ -1,15 +1,17 @@
 import 'package:translocale_delivery/translocale_delivery.dart';
 import 'catalog.dart';
+import 'messages.dart';
 
 /// Owns one optional delivery runtime and the app's selected language.
 /// No network or platform work occurs until start/check is called by the app or builder.
-class TransLocale {
+class TransLocale<T extends Object> implements TransLocaleMessageResolver {
   TransLocale({required this.catalog, required String locale, this.delivery})
     : _locale = catalog.resolveLocale(locale) {
     _unsubscribe = delivery?.addListener(_notify);
   }
 
-  final TransLocaleCatalog catalog;
+  final TransLocaleCatalog<T> catalog;
+  late final T strings = catalog.createMessages(this);
   final DeliveryRuntime? delivery;
   final _formatter = FlutterMessageFormatter();
   final Set<void Function()> _listeners = {};
@@ -58,36 +60,40 @@ class TransLocale {
 
   /// Format a delivered message, then bundled target/source wording on failure.
   /// Unknown keys and unusable bundled messages return [fallback] or the key.
-  /// Pass formatted date/number strings separately while retaining raw selectors.
-  String text(
+  /// Formatting uses the locale of each candidate, including the source fallback.
+  @override
+  String resolve(
     String key, {
     Map<String, Object> arguments = const {},
-    Map<String, String> formatted = const {},
+    Map<String, String> Function(String locale)? formatArguments,
     String? fallback,
   }) {
     final source = catalog.messages[catalog.sourceLocale]![key];
     if (source == null) return fallback ?? key;
-    String sourceFallback() => _formatter.format(
-      source,
-      locale: catalog.sourceLocale,
-      arguments: arguments,
-      formatted: formatted,
-      fallback: () => fallback ?? key,
-    );
-    String bundled() => _formatter.format(
-      catalog.messages[_locale]?[key],
-      locale: _locale,
-      arguments: arguments,
-      formatted: formatted,
-      fallback: sourceFallback,
-    );
+    String format(String? message, String locale, String Function() fallback) {
+      if (message == null) return fallback();
+      try {
+        return _formatter.format(
+          message,
+          locale: locale,
+          arguments: arguments,
+          formatted: formatArguments?.call(locale) ?? const {},
+          fallback: fallback,
+        );
+      } catch (_) {
+        return fallback();
+      }
+    }
+
+    String sourceFallback() =>
+        format(source, catalog.sourceLocale, () => fallback ?? key);
+    String bundled() =>
+        format(catalog.messages[_locale]?[key], _locale, sourceFallback);
     if (_disposed) return bundled();
-    return _formatter.format(
+    return format(
       delivery?.getCatalog(catalog.file, _locale)?[key],
-      locale: _locale,
-      arguments: arguments,
-      formatted: formatted,
-      fallback: bundled,
+      _locale,
+      bundled,
     );
   }
 

@@ -3,18 +3,18 @@ import 'package:dartnative/dartnative.dart';
 import 'controller.dart';
 
 /// Access translations from descendants; changes rebuild dependent widgets.
-class TransLocaleScope extends InheritedWidget {
+class TransLocaleScope<T extends Object> extends InheritedWidget {
   TransLocaleScope({
     super.key,
     required this.translations,
     required super.child,
   }) : revision = translations.revision;
-  final TransLocale translations;
+  final TransLocale<T> translations;
   final int revision;
 
-  static TransLocale of(BuildContext context) {
+  static TransLocale<T> of<T extends Object>(BuildContext context) {
     final scope = context
-        .dependOnInheritedWidgetOfExactType<TransLocaleScope>();
+        .dependOnInheritedWidgetOfExactType<TransLocaleScope<T>>();
     if (scope == null) {
       throw StateError('Add TransLocaleBuilder above this widget.');
     }
@@ -22,28 +22,29 @@ class TransLocaleScope extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(TransLocaleScope oldWidget) =>
+  bool updateShouldNotify(TransLocaleScope<T> oldWidget) =>
       translations != oldWidget.translations || revision != oldWidget.revision;
 }
 
 /// Owns its controller, updates descendants, and pauses polling in the background.
 /// Create the controller outside build. Do not share it between builders.
-class TransLocaleBuilder extends StatefulWidget {
+class TransLocaleBuilder<T extends Object> extends StatefulWidget {
   const TransLocaleBuilder({
     super.key,
     required this.translations,
     required this.builder,
     this.automaticUpdates = true,
   });
-  final TransLocale translations;
-  final Widget Function(BuildContext context, TransLocale translations) builder;
+  final TransLocale<T> translations;
+  final Widget Function(BuildContext context, T strings) builder;
   final bool automaticUpdates;
 
   @override
-  State<TransLocaleBuilder> createState() => _TransLocaleBuilderState();
+  State<TransLocaleBuilder<T>> createState() => _TransLocaleBuilderState<T>();
 }
 
-class _TransLocaleBuilderState extends State<TransLocaleBuilder>
+class _TransLocaleBuilderState<T extends Object>
+    extends State<TransLocaleBuilder<T>>
     with WidgetsBindingObserver {
   void Function()? _unsubscribe;
   bool _ready = false, _started = false;
@@ -91,7 +92,7 @@ class _TransLocaleBuilderState extends State<TransLocaleBuilder>
   void didChangeAppLifecycleState(AppLifecycleState state) => _activate(state);
 
   @override
-  void didUpdateWidget(covariant TransLocaleBuilder oldWidget) {
+  void didUpdateWidget(covariant TransLocaleBuilder<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.translations != widget.translations) {
       _unsubscribe?.call();
@@ -112,36 +113,31 @@ class _TransLocaleBuilderState extends State<TransLocaleBuilder>
   }
 
   @override
-  Widget build(BuildContext context) => TransLocaleScope(
+  Widget build(BuildContext context) => TransLocaleScope<T>(
     translations: widget.translations,
     child: Directionality(
       textDirection: widget.translations.isRightToLeft
           ? TextDirection.rtl
           : TextDirection.ltr,
       child: Builder(
-        builder: (context) => widget.builder(context, widget.translations),
+        builder: (context) =>
+            widget.builder(context, widget.translations.strings),
       ),
     ),
   );
 }
 
 /// A localized native text view with explicit language direction and alignment.
-class TransLocaleText extends StatelessWidget {
+class TransLocaleText<T extends Object> extends StatelessWidget {
   const TransLocaleText(
-    this.messageKey, {
+    this.message, {
     super.key,
-    this.arguments = const {},
-    this.formatted = const {},
-    this.fallback,
     this.style,
     this.textAlign,
     this.maxLines,
     this.overflow,
   });
-  final String messageKey;
-  final Map<String, Object> arguments;
-  final Map<String, String> formatted;
-  final String? fallback;
+  final String Function(T strings) message;
   final TextStyle? style;
   final TextAlign? textAlign;
   final int? maxLines;
@@ -149,14 +145,9 @@ class TransLocaleText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = TransLocaleScope.of(context);
+    final t = TransLocaleScope.of<T>(context);
     return Text(
-      t.text(
-        messageKey,
-        arguments: arguments,
-        formatted: formatted,
-        fallback: fallback,
-      ),
+      message(t.strings),
       style: style,
       textDirection: t.isRightToLeft ? TextDirection.rtl : TextDirection.ltr,
       textAlign:

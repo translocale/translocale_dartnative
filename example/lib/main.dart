@@ -40,7 +40,7 @@ class _TranslationExampleState extends State<TranslationExample> {
     title: 'TransLocale',
     home: TransLocaleBuilder(
       translations: translations,
-      builder: (context, t) => Scaffold(
+      builder: (context, _) => Scaffold(
         appBar: AppBar(title: const Text('TransLocale')),
         body: SafeArea(
           child: Padding(
@@ -48,23 +48,21 @@ class _TranslationExampleState extends State<TranslationExample> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TransLocaleText(
-                  'symbol',
+                TransLocaleText<AppStrings>(
+                  (strings) => strings.symbol,
                   style: const TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 24),
-                TransLocaleText(
-                  'hello',
-                  arguments: {'name': 'Sam'},
+                TransLocaleText<AppStrings>(
+                  (strings) => strings.hello(name: 'Sam'),
                   style: const TextStyle(fontSize: 22),
                 ),
                 const SizedBox(height: 12),
-                TransLocaleText(
-                  'items',
-                  arguments: {'count': 3},
+                TransLocaleText<AppStrings>(
+                  (strings) => strings.items(count: 3),
                   style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(height: 32),
@@ -77,21 +75,23 @@ class _TranslationExampleState extends State<TranslationExample> {
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Button(
                       variant: ButtonVariant.filled,
-                      onPressed: () => t.setLocale(language.key),
+                      onPressed: () => translations.setLocale(language.key),
                       child: Text(language.value),
                     ),
                   ),
                 const SizedBox(height: 16),
-                Text('Locale: ${t.locale} · Source: ${t.state.source}'),
-                if (t.delivery != null) ...[
+                Text(
+                  'Locale: ${translations.locale} · Source: ${translations.state.source}',
+                ),
+                if (translations.delivery != null) ...[
                   Text(
-                    'Delivery: ${t.state.status}${t.state.error == null ? '' : ' (${t.state.error})'}',
+                    'Delivery: ${translations.state.status}${translations.state.error == null ? '' : ' (${translations.state.error})'}',
                   ),
                   const SizedBox(height: 12),
                   Button(
                     variant: ButtonVariant.bordered,
                     onPressed: () {
-                      t.check();
+                      translations.check();
                     },
                     child: const Text('Refresh translations'),
                   ),

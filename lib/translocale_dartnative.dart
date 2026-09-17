@@ -6,4 +6,5 @@ export 'package:translocale_delivery/translocale_delivery.dart'
 export 'src/catalog.dart';
 export 'src/controller.dart';
 export 'src/delivery.dart';
+export 'src/messages.dart';
 export 'src/widgets.dart';

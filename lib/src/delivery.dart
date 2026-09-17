@@ -41,7 +41,7 @@ class DartNativeDelivery implements DeliveryRuntime {
   /// The cloud project's UUID.
   final String projectId;
 
-  /// The compatibility hash emitted by the generated localization adapter.
+  /// The compatibility hash returned by the shared release-schema command.
   final String schemaHash;
 
   /// An HTTPS service origin. Loopback HTTP is allowed for local development.

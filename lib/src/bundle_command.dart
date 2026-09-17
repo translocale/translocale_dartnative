@@ -16,6 +16,11 @@ void runBundleCommand(List<String> arguments) {
       help: 'Exact catalog identity in TransLocale.',
     )
     ..addOption('out', defaultsTo: 'lib/translocale_bundle.g.dart')
+    ..addOption(
+      'class-name',
+      defaultsTo: 'AppStrings',
+      help: 'Generated message class name.',
+    )
     ..addFlag(
       'check',
       negatable: false,
@@ -43,6 +48,7 @@ void runBundleCommand(List<String> arguments) {
       sourceLocale: args.option('source')!,
       catalog: args.option('catalog')!,
       output: args.option('out')!,
+      className: args.option('class-name')!,
       check: args.flag('check'),
       replace: args.flag('replace'),
     );

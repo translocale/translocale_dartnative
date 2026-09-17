@@ -2,6 +2,7 @@
 
 # TransLocale for DartNative
 
+
 Add translations to your [DartNative](https://dartnative.com/) app. Keep them in the app so they work offline, let users switch languages, and update published wording through [TransLocale](https://translocale.io/).
 
 **Yes, OTA translation updates are supported.** You can deliver compatible wording changes without releasing a new app version. Adding keys, languages, layouts, or code still needs a new app build.
@@ -34,7 +35,7 @@ dependencies:
   dartnative_path_provider: ^1.0.0
   translocale_dartnative:
     hosted: https://dartpub.dev
-    version: ^0.1.0
+    version: ^0.2.0
 ```
 
 Include all three packages. The two native packages let TransLocale read the app version and save downloaded translations.
@@ -73,7 +74,7 @@ Create `l10n/app_fr.arb`:
 }
 ```
 
-Here, `hello` and `items` are the keys your app uses. `{name}` and `{count}` are values supplied by your app. The `@hello` and `@items` entries describe those values for validation.
+Here, `hello` and `items` are the keys your app uses. `{name}` and `{count}` are values supplied by your app. The `@hello` and `@items` entries define the types of the generated method parameters.
 
 ### 3. Generate the Dart file
 
@@ -92,7 +93,7 @@ dart --packages=.dart_tool/package_config.json tool/bundle.dart \
   --arb-dir l10n --source en --catalog app.arb
 ```
 
-This creates `lib/translocale_bundle.g.dart`. Commit it along with your ARB files. `app.arb` is the name that identifies this catalog in TransLocale; use the same name when setting up OTA updates.
+This creates `lib/translocale_bundle.g.dart` with a typed `AppStrings` class and its catalog. Commit it along with your ARB files. `app.arb` is the name that identifies this catalog in TransLocale; use the same name when setting up OTA updates.
 
 The command only reads local files. It does not upload your messages or start a translation job.
 
@@ -113,13 +114,13 @@ void main() {
     title: 'My app',
     home: TransLocaleBuilder(
       translations: translations,
-      builder: (context, t) => Scaffold(
+      builder: (context, strings) => Scaffold(
         body: SafeArea(
           child: Column(children: [
-            const TransLocaleText('hello', arguments: {'name': 'Sam'}),
-            const TransLocaleText('items', arguments: {'count': 3}),
+            Text(strings.hello(name: 'Sam')),
+            Text(strings.items(count: 3)),
             Button(
-              onPressed: () => t.setLocale('fr'),
+              onPressed: () => translations.setLocale('fr'),
               child: const Text('Français'),
             ),
           ]),
@@ -177,7 +178,9 @@ Create `release-schema.json` in your app directory:
 {
   "sourceLocale": "en",
   "locales": ["fr"],
-  "catalogs": [{ "file": "app.arb", "format": "arb", "path": "l10n/app_en.arb" }]
+  "catalogs": [
+    { "file": "app.arb", "format": "arb", "path": "l10n/app_en.arb" }
+  ]
 }
 ```
 
@@ -232,7 +235,7 @@ Run the app with your delivery settings:
 dn run --dart-define-from-file=translocale.delivery.json
 ```
 
-Publish a different French message to the same preview channel. The app checks after the first frame and then every five minutes while it is in the foreground. You can call `await t.check()` to refresh sooner. If an update does not appear, inspect `t.state.status` and `t.state.error`.
+Publish a different French message to the same preview channel. The app checks after the first frame and then every five minutes while it is in the foreground. You can call `await translations.check()` to refresh sooner. If an update does not appear, inspect `translations.state.status` and `translations.state.error`.
 
 For production, publish to the `production` channel, create a delivery credential for that channel, and change both the token and `channel` in your app configuration.
 
@@ -246,52 +249,82 @@ Tell your assistant that your app uses DartNative and share this README. The gui
 
 ## Common tasks
 
-| Task | How |
-| --- | --- |
-| Change language | `t.setLocale('fr')` |
-| Get a translated string | `t.text('hello', arguments: {'name': 'Sam'})` |
-| Access translations in a child widget | `TransLocaleScope.of(context)` |
-| Display right-to-left text | Use `TransLocaleText` for native direction and alignment |
-| Check for an OTA update now | `await t.check()` |
-| Turn off automatic updates | Set `automaticUpdates: false` on `TransLocaleBuilder`; call `check()` yourself |
+| Task                                  | How                                                                                               |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Change language                       | `translations.setLocale('fr')`                                                                    |
+| Get a translated string               | `translations.strings.hello(name: 'Sam')`                                                         |
+| Access translations in a child widget | `TransLocaleScope.of<AppStrings>(context).strings`                                                |
+| Display right-to-left text            | Use `TransLocaleText<AppStrings>((s) => s.hello(name: 'Sam'))` for native direction and alignment |
+| Check for an OTA update now           | `await translations.check()`                                                                      |
+| Turn off automatic updates            | Set `automaticUpdates: false` on `TransLocaleBuilder`; call `check()` yourself                    |
 
-Your app chooses the language explicitly. A locale such as `fr-CA` falls back to `fr`, then to the source language. For each key, TransLocale tries downloaded wording, bundled wording for that language, then bundled source wording. If no usable message exists, it returns the key or your supplied `fallback`.
+Your app chooses the language explicitly. A locale such as `fr-CA` falls back to `fr`, then to the source language. For each key, TransLocale tries downloaded wording, bundled wording for that language, then bundled source wording. If no usable message exists, it returns the key. Generated accessors prevent unknown keys and incorrect argument types in statically checked application code.
 
 ## Delivery options
 
 These options belong to `DartNativeDelivery`:
 
-| Option | Default | What it does |
-| --- | --- | --- |
-| `projectId`, `schemaHash`, `token` | Required | Select the project and compatible release |
-| `channel` | `production` | Choose the release channel; use `preview` for testing |
-| `apiBaseUrl` | `https://translocale.io` | Set the HTTPS service URL; local tests may use loopback HTTP |
-| `appVersion` | Installed app version | Override the automatically detected version |
-| `persistentCache` | `true` | Keep validated updates after restarting the app |
-| `cache` | Native file cache | Supply a custom `DeliveryCache` |
-| `pollInterval` | Five minutes | Set the refresh interval, from 30 seconds to one hour |
+| Option                             | Default                  | What it does                                                 |
+| ---------------------------------- | ------------------------ | ------------------------------------------------------------ |
+| `projectId`, `schemaHash`, `token` | Required                 | Select the project and compatible release                    |
+| `channel`                          | `production`             | Choose the release channel; use `preview` for testing        |
+| `apiBaseUrl`                       | `https://translocale.io` | Set the HTTPS service URL; local tests may use loopback HTTP |
+| `appVersion`                       | Installed app version    | Override the automatically detected version                  |
+| `persistentCache`                  | `true`                   | Keep validated updates after restarting the app              |
+| `cache`                            | Native file cache        | Supply a custom `DeliveryCache`                              |
+| `pollInterval`                     | Five minutes             | Set the refresh interval, from 30 seconds to one hour        |
 
 `TransLocaleBuilder` starts delivery and pauses polling when the app goes into the background. Network failures leave the last validated wording available. If you use a controller without the builder, call `start()`, handle foreground changes with `setActive`, and dispose of it yourself.
 
+## Typed messages
+
+The generator creates a getter for each message without placeholders and a method with required named parameters for each message with placeholders. Keep source placeholder types explicit: `String`, `int`, `double`, `num`, or `DateTime`. Broad `Object`, `dynamic`, nullable types, missing metadata, and invalid Dart identifiers fail generation before the existing output is changed.
+
+```dart
+final strings = translations.strings;
+strings.hello(name: 'Sam');
+strings.items(count: 3);
+// strings.hello();          // Missing required argument.
+// strings.items(count: '3'); // Wrong argument type.
+```
+
+The generated strings remain attached to their controller. Read them during each build so locale changes and delivered wording appear immediately. `TransLocaleBuilder` supplies the typed strings and rebuilds on updates. In a descendant widget, use `TransLocaleScope.of<AppStrings>(context).strings`, or a typed text selector:
+
+```dart
+TransLocaleText<AppStrings>(
+  (strings) => strings.hello(name: 'Sam'),
+)
+```
+
+Use `--class-name CheckoutStrings` when a catalog needs a different generated class name. Keys remain unchanged in the catalog; reserved names and identifier collisions produce an error instead of silently renaming keys.
+
+Number formatting comes from ARB `format` and `optionalParameters`. Date placeholders require a supported `DateFormat` skeleton such as `yMd`; custom patterns require `isCustomDateFormat: true`. Generated code initializes bundled date data and formats each fallback using that message's locale. App code supplies raw numbers and dates; numeric plural selection keeps the original value. Unsupported formats and options fail generation.
+
+Generation is local. Run `--check` and Dart analysis in CI. Changes to keys, parameter types, formatting metadata, or supported locales also require recomputing the existing release schema and shipping a compatible app build. OTA can update wording within that contract.
+
+### Updating the 0.1.0 example
+
+Regenerate the bundle. Replace `t.text('hello', arguments: {'name': 'Sam'})` with `translations.strings.hello(name: 'Sam')`. The builder's second argument is now the generated strings; call `setLocale`, `check`, and other lifecycle methods on the controller. Replace string-key `TransLocaleText` calls with typed selectors. There is no legacy string-key widget API in 0.2.0.
+
 ## Supported messages and limits
 
-Version 0.1.0 supports one catalog per controller, up to 200 source messages, and ten target languages. Each ARB file needs `@@locale` and must be at most 100 KB.
+The package supports one catalog per controller, up to 200 source messages, and ten target languages. Each ARB file needs `@@locale` and must be at most 100 KB.
 
 Messages can use placeholders, `select`, and cardinal plurals with `zero`, `one`, `two`, `few`, `many`, and `other` branches. The formatter also accepts `=0`, `=1`, and `=2`; prefer category names for portability.
 
-Ordinals, plural offsets, other exact-number branches, rich text, and inline date or number formatting are not supported. For dates and numbers, supply raw values in `arguments` and display strings in `formatted`. ARB metadata is used for schema checks, not bundled as display text or used to generate formatting code.
+Ordinals, plural offsets, other exact-number branches, rich text, and inline date or number formatting are not supported. For dates and numbers, declare source ARB formatting metadata and pass raw values to the generated methods. Metadata determines generated types and formatting; it also participates in release schema checks.
 
-This package uses DartNative widgets and key-based lookups. It does not use Flutter's `gen-l10n`, localization delegates, or generated typed getters.
+This package generates its own typed messages for DartNative. Flutter apps use Flutter's `gen-l10n` and the TransLocale Flutter packages.
 
 ## Troubleshooting
 
-| Problem | What to check |
-| --- | --- |
-| Native packages will not resolve | Run `dn pub get` and include both native dependencies from step 1. Development-only `dependency_overrides` in `pubspec_overrides.yaml` can hide SDK overrides. |
-| OTA wording does not appear | Check `t.state.error`. Make sure the project, channel, schema hash, token, and installed app version match a published release. |
-| An `app_version` error appears | Keep native plugin registration, or provide `appVersion` yourself. Version lookup times out after three seconds; retry with `check()`. |
-| Arabic text stays left aligned | Use `TransLocaleText`, or set both direction and alignment on your native `Text` view. |
-| The generator says `Bundle is stale` | Run the bundle command with `--replace` and review the changed Dart file. |
+| Problem                              | What to check                                                                                                                                                  |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Native packages will not resolve     | Run `dn pub get` and include both native dependencies from step 1. Development-only `dependency_overrides` in `pubspec_overrides.yaml` can hide SDK overrides. |
+| OTA wording does not appear          | Check `translations.state.error`. Make sure the project, channel, schema hash, token, and installed app version match a published release.                     |
+| An `app_version` error appears       | Keep native plugin registration, or provide `appVersion` yourself. Version lookup times out after three seconds; retry with `check()`.                         |
+| Arabic text stays left aligned       | Use `TransLocaleText`, or set both direction and alignment on your native `Text` view.                                                                         |
+| The generator says `Bundle is stale` | Run the bundle command with `--replace` and review the changed Dart file.                                                                                      |
 
 For a larger example with English, French, and Arabic, see the [example app](https://github.com/translocale/translocale_dartnative/tree/main/example). Report problems in [GitHub issues](https://github.com/translocale/translocale_dartnative/issues).
 

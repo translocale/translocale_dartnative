@@ -1,3 +1,5 @@
+import 'messages.dart';
+
 /// Canonicalize common BCP 47 tags used by TransLocale catalogs.
 String canonicalLocale(String value) {
   final parts = value.replaceAll('_', '-').split('-');
@@ -23,10 +25,11 @@ String canonicalLocale(String value) {
 }
 
 /// An immutable bundled ARB catalog. Message strings use the supported ICU dialect.
-class TransLocaleCatalog {
+class TransLocaleCatalog<T extends Object> {
   TransLocaleCatalog({
     required String sourceLocale,
     required this.file,
+    required this.createMessages,
     required Map<String, Map<String, String>> messages,
   }) : sourceLocale = canonicalLocale(sourceLocale),
        messages = _freeze(messages) {
@@ -61,6 +64,7 @@ class TransLocaleCatalog {
 
   final String sourceLocale;
   final String file;
+  final T Function(TransLocaleMessageResolver) createMessages;
   final Map<String, Map<String, String>> messages;
   List<String> get supportedLocales => List.unmodifiable(messages.keys);
 

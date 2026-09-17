@@ -1,3 +1,4 @@
+import 'package:translocale_dartnative/src/messages.dart';
 import 'package:test/test.dart';
 import 'package:translocale_dartnative/src/catalog.dart';
 import 'package:translocale_dartnative/src/controller.dart';
@@ -43,26 +44,29 @@ class FakeDelivery implements DeliveryRuntime {
 }
 
 void main() {
-  TransLocaleCatalog catalog() => TransLocaleCatalog(
-    sourceLocale: 'en',
-    file: 'app.arb',
-    messages: {
-      'en': {
-        'hello': 'Hello {name}',
-        'count': '{n, plural, one{One entry} other{{n} entries}}',
-        'source': 'Source',
-      },
-      'fr': {'hello': 'Bonjour {name}'},
-      'ar': {'hello': 'مرحبًا {name}'},
-      'ar-Latn': {},
-      'zh-Hant': {},
-    },
-  );
+  TransLocaleCatalog<TransLocaleMessageResolver> catalog() =>
+      TransLocaleCatalog(
+        createMessages: (resolver) => resolver,
+        sourceLocale: 'en',
+        file: 'app.arb',
+        messages: {
+          'en': {
+            'hello': 'Hello {name}',
+            'count': '{n, plural, one{One entry} other{{n} entries}}',
+            'source': 'Source',
+          },
+          'fr': {'hello': 'Bonjour {name}'},
+          'ar': {'hello': 'مرحبًا {name}'},
+          'ar-Latn': {},
+          'zh-Hant': {},
+        },
+      );
   test('catalogs are immutable snapshots, including nested maps', () {
     final source = {
       'en': {'hello': 'Hello'},
     };
     final c = TransLocaleCatalog(
+      createMessages: (resolver) => resolver,
       sourceLocale: 'en',
       file: 'app.arb',
       messages: source,
@@ -85,6 +89,7 @@ void main() {
   test('rejects duplicate normalized locales and invalid catalogs', () {
     expect(
       () => TransLocaleCatalog(
+        createMessages: (resolver) => resolver,
         sourceLocale: 'en',
         file: 'app.arb',
         messages: {
@@ -97,6 +102,7 @@ void main() {
     );
     expect(
       () => TransLocaleCatalog(
+        createMessages: (resolver) => resolver,
         sourceLocale: 'en',
         file: '../app.arb',
         messages: {
@@ -107,6 +113,7 @@ void main() {
     );
     expect(
       () => TransLocaleCatalog(
+        createMessages: (resolver) => resolver,
         sourceLocale: 'en',
         file: 'app.arb',
         messages: {
@@ -117,6 +124,7 @@ void main() {
     );
     expect(
       () => TransLocaleCatalog(
+        createMessages: (resolver) => resolver,
         sourceLocale: 'en',
         file: 'app.arb',
         messages: {
@@ -131,12 +139,12 @@ void main() {
     'bundled target and source fallback format placeholders and plurals',
     () {
       final t = TransLocale(catalog: catalog(), locale: 'fr');
-      expect(t.text('hello', arguments: {'name': 'Sam'}), 'Bonjour Sam');
-      expect(t.text('count', arguments: {'n': 1}), 'One entry');
-      expect(t.text('count', arguments: {'n': 3}), '3 entries');
-      expect(t.text('source'), 'Source');
-      expect(t.text('unknown', fallback: 'Fallback'), 'Fallback');
-      expect(t.text('hello'), 'hello');
+      expect(t.resolve('hello', arguments: {'name': 'Sam'}), 'Bonjour Sam');
+      expect(t.resolve('count', arguments: {'n': 1}), 'One entry');
+      expect(t.resolve('count', arguments: {'n': 3}), '3 entries');
+      expect(t.resolve('source'), 'Source');
+      expect(t.resolve('unknown', fallback: 'Fallback'), 'Fallback');
+      expect(t.resolve('hello'), 'hello');
       t.dispose();
     },
   );
@@ -149,11 +157,11 @@ void main() {
           'app.arb:ar': {'hello': '{bad, plural, one{oops}}'},
         };
       final t = TransLocale(catalog: catalog(), locale: 'fr-CA', delivery: d);
-      expect(t.text('hello', arguments: {'name': 'Sam'}), 'Salut Sam');
+      expect(t.resolve('hello', arguments: {'name': 'Sam'}), 'Salut Sam');
       d.catalogs['app.arb:fr']!['hello'] = '{missing}';
-      expect(t.text('hello', arguments: {'name': 'Sam'}), 'Bonjour Sam');
+      expect(t.resolve('hello', arguments: {'name': 'Sam'}), 'Bonjour Sam');
       t.setLocale('ar');
-      expect(t.text('hello', arguments: {'name': 'Sam'}), 'مرحبًا Sam');
+      expect(t.resolve('hello', arguments: {'name': 'Sam'}), 'مرحبًا Sam');
       t.dispose();
     },
   );
@@ -176,7 +184,7 @@ void main() {
       t.dispose();
       expect(d.disposed, isTrue);
       expect(d.listeners, isEmpty);
-      expect(t.text('hello', arguments: {'name': 'Sam'}), 'Bonjour Sam');
+      expect(t.resolve('hello', arguments: {'name': 'Sam'}), 'Bonjour Sam');
       expect(() => t.setLocale('en'), throwsStateError);
     },
   );
@@ -191,6 +199,7 @@ void main() {
   test('Arabic plural branches use the selected locale', () {
     final t = TransLocale(
       catalog: TransLocaleCatalog(
+        createMessages: (resolver) => resolver,
         sourceLocale: 'en',
         file: 'app.arb',
         messages: {
@@ -211,7 +220,7 @@ void main() {
       11: 'many',
       100: 'other',
     }.entries) {
-      expect(t.text('n', arguments: {'n': entry.key}), entry.value);
+      expect(t.resolve('n', arguments: {'n': entry.key}), entry.value);
     }
   });
 }

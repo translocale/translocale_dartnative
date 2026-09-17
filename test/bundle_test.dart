@@ -26,13 +26,13 @@ void main() {
     'bundles Unicode and escapes Dart interpolation without executing it',
     () {
       arb('en', {
-        'hello': r'Hello $name ${throw Error()}',
+        'hello': r"Hello $name $'{throw Error()}'",
         'quote': "it's fine",
       });
       arb('ar', {'hello': 'مرحبًا'});
       final s = generate();
       expect(s, contains(r'\$name'));
-      expect(s, contains(r'\${throw Error()}'));
+      expect(s, contains(r"\$'{throw Error()}'"));
       expect(s, contains('مرحبًا'));
       expect(generate(check: true), s);
     },

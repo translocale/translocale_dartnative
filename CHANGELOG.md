@@ -1,3 +1,7 @@
+## 0.2.0
+
+Generate typed messages from ARB with required named parameters. Bind strings to their catalog and controller, use typed builders and text selectors, validate every message branch, and format numbers/dates for each fallback locale. Removes string-key text widgets and the controller text API.
+
 ## 0.1.0
 
 - Add ARB bundle generation with freshness checks.
