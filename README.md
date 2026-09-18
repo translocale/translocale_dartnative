@@ -2,7 +2,6 @@
 
 # TransLocale for DartNative
 
-
 Add translations to your [DartNative](https://dartnative.com/) app. Keep them in the app so they work offline, let users switch languages, and update published wording through [TransLocale](https://translocale.io/).
 
 **Yes, OTA translation updates are supported.** You can deliver compatible wording changes without releasing a new app version. Adding keys, languages, layouts, or code still needs a new app build.
@@ -326,3 +325,9 @@ For a larger example with English, French, and Arabic, see the [example app](htt
 ## License
 
 This package is [MIT licensed](https://github.com/translocale/translocale_dartnative/blob/main/LICENSE). The TransLocale hosted service is proprietary.
+
+## Automatic delivery reporting
+
+Reports also include SDK package/version, latest wording source and cache state, the previous check outcome, fixed cache failure categories, and download/validation durations for successful updates. Random event IDs deduplicate retransmission. Reporting uses existing checks, with no extra requests or public settings.
+
+The updated delivery runtime automatically reports a random project-scoped installation ID, platform/runtime, app version, verified active release, and fixed error category with its existing OTA checks. Reports go to the configured TransLocale delivery origin for the internal operations dashboard. There is no reporting configuration. The delivery cache stores the ID separately from release wording; custom storage must honor each key. Missing or blocked storage produces session counts instead of persistent installation counts. Reports contain no wording or hardware identifiers, and reporting failures do not interrupt translation delivery. TransLocale stores project-scoped hashes and retains observations for 90 UTC days. These measurements require the updated shared delivery package and service.

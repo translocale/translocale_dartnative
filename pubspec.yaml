@@ -1,6 +1,6 @@
 name: translocale_dartnative
 description: Bundled localization and approved over-the-air translation updates for DartNative apps, with native caching and offline fallback.
-version: 0.2.0
+version: 0.2.1
 publish_to: https://dartpub.dev
 homepage: https://translocale.io
 repository: https://github.com/translocale/translocale_dartnative
@@ -16,7 +16,7 @@ dependencies:
   intl: ^0.20.2
   translocale_delivery:
     hosted: https://pub.dev
-    version: ^0.1.4
+    version: ^0.1.6
 dev_dependencies:
   fake_async: ^1.3.3
   lints: ^5.1.1
