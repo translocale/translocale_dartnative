@@ -302,7 +302,7 @@ Regenerate the bundle. Replace `t.text('hello', arguments: {'name': 'Sam'})` wit
 
 ## Supported messages and limits
 
-The package supports one catalog per controller, up to 200 source messages, and ten target languages. Each ARB file needs `@@locale` and must be at most 100 KB.
+The package supports one catalog per controller and up to 200 source messages, with no fixed target-language count limit. Each ARB file needs `@@locale` and must be at most 100 KB.
 
 Messages can use placeholders, `select`, and cardinal plurals with `zero`, `one`, `two`, `few`, `many`, and `other` branches. The formatter also accepts `=0`, `=1`, and `=2`; prefer category names for portability.
 

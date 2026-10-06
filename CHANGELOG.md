@@ -1,3 +1,7 @@
+## 0.2.2
+
+- Remove the fixed language-count cap from bundled catalogs and require delivery 0.1.7 for larger OTA releases.
+
 ## 0.2.1
 
 - Require delivery 0.1.6 for automatic installation reports and OTA diagnostics with existing update checks.

@@ -29,8 +29,8 @@ String generateBundle({
   final dir = Directory(directory);
   final files = dir.listSync().where((f) => f.path.endsWith('.arb')).toList()
     ..sort((a, b) => a.path.compareTo(b.path));
-  if (files.isEmpty || files.length > 11) {
-    throw FormatException('Use 1–11 ARB files.');
+  if (files.isEmpty) {
+    throw FormatException('Include at least one ARB file.');
   }
   final messages = <String, Map<String, String>>{};
   final documents = <String, Map<String, dynamic>>{};

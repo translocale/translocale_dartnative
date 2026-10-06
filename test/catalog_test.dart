@@ -61,6 +61,32 @@ void main() {
           'zh-Hant': {},
         },
       );
+  test('supports more than ten target languages', () {
+    final locales = [
+      'en',
+      'fr',
+      'de',
+      'es',
+      'it',
+      'pt',
+      'nl',
+      'sv',
+      'pl',
+      'tr',
+      'ja',
+      'ko',
+      'ar',
+    ];
+    final value = TransLocaleCatalog(
+      createMessages: (resolver) => resolver,
+      sourceLocale: 'en',
+      file: 'app.arb',
+      messages: {
+        for (final locale in locales) locale: {'hello': 'Hello'},
+      },
+    );
+    expect(value.messages.length, 13);
+  });
   test('catalogs are immutable snapshots, including nested maps', () {
     final source = {
       'en': {'hello': 'Hello'},

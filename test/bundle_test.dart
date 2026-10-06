@@ -22,6 +22,26 @@ void main() {
     check: check,
     replace: replace,
   );
+  test('generates a bundle with more than ten target languages', () {
+    for (final locale in [
+      'en',
+      'fr',
+      'de',
+      'es',
+      'it',
+      'pt',
+      'nl',
+      'sv',
+      'pl',
+      'tr',
+      'ja',
+      'ko',
+      'ar',
+    ]) {
+      arb(locale, {'hello': 'Hello'});
+    }
+    expect(generate(), contains('"ar"'));
+  });
   test(
     'bundles Unicode and escapes Dart interpolation without executing it',
     () {

@@ -50,9 +50,6 @@ class TransLocaleCatalog<T extends Object> {
     if (source == null || source.isEmpty || source.length > 200) {
       throw ArgumentError('Include a source catalog with 1–200 messages.');
     }
-    if (this.messages.length > 11) {
-      throw ArgumentError('Use at most ten target languages.');
-    }
     for (final catalog in this.messages.values) {
       if (catalog.keys.any((key) => !source.containsKey(key))) {
         throw ArgumentError(
